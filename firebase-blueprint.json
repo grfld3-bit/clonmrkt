@@ -1,0 +1,27 @@
+{
+  "entities": {
+    "Gift": {
+      "title": "Gift",
+      "description": "A gift item listed in the marketplace.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "number": { "type": "string" },
+        "price": { "type": "number" },
+        "imageUrl": { "type": "string" },
+        "marketplaceUrl": { "type": "string" },
+        "category": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "createdBy": { "type": "string" }
+      },
+      "required": ["name", "price", "imageUrl", "marketplaceUrl", "createdBy"]
+    }
+  },
+  "firestore": {
+    "/gifts/{giftId}": {
+      "schema": "Gift",
+      "description": "Collection of gifts submitted by users."
+    }
+  }
+}

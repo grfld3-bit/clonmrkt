@@ -1,0 +1,5 @@
+{
+  "name": "Gift Marketplace Bot",
+  "description": "A marketplace app integrated with a bot for gift inputs from marketplace links.",
+  "requestFramePermissions": []
+}

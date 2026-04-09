@@ -1,0 +1,58 @@
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// Collection: gifts
+// Document ID: {giftId}
+// Fields:
+//   - name: string (required)
+//   - number: string (optional)
+//   - price: number (required)
+//   - imageUrl: string (required)
+//   - marketplaceUrl: string (required)
+//   - category: string (optional)
+//   - createdAt: timestamp (required)
+//   - createdBy: string (required) - UID of the user who added it
+//
+// ===============================================================
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isValidGift(data) {
+      return data.name is string && data.name.size() > 0 && data.name.size() < 100 &&
+             data.price is number && data.price >= 0 &&
+             data.imageUrl is string && data.imageUrl.matches("^https?://.*") &&
+             data.marketplaceUrl is string && data.marketplaceUrl.matches("^https?://.*");
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /gifts/{giftId} {
+      // Public access
+      allow read: if true;
+      allow create: if isValidGift(request.resource.data);
+      allow update, delete: if true; // Allow for demo purposes without auth
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
